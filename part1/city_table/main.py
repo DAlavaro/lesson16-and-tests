@@ -21,9 +21,14 @@ db = SQLAlchemy(app)
 
 class City(db.Model):
     __tablename__ = 'city'
+    id =db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String)
+    country_tu = db.Column(db.String)
+    population = db.Column(db.Integer)
     # TODO определите поля модели здесь
 
 
+db.drop_all()
 # Не удаляйте код ниже, он нужен для корректного отображения
 # созданной вами модели при запуске файла
 
