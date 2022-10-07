@@ -44,7 +44,7 @@
     # возвращались гиды с нужным количеством туров.
 """
 
-from flask import Flask
+from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from guides_sql import CREATE_TABLE, INSERT_VALUES
@@ -70,7 +70,60 @@ class Guide(db.Model):
     is_pro = db.Column(db.Boolean)
     company = db.Column(db.Integer)
 
-# TODO напишите роуты здесь
+def guide_func(instance):
+    return {
+        "id": instance.id,
+        "surname": instance.surname,
+        "full_name": instance.full_name,
+        "tours_count": instance.tours_count,
+        "bio": instance.bio,
+        "is_pro": instance.is_pro,
+        "company": instance.company,
+    }
+
+
+@app.route("/guides")
+def get_all_and_by_tours_count():
+    tours_count = request.args.get("tours_count")
+    result = []
+    if not tours_count:
+        guides = Guide.query.all()
+        for guide in guides:
+            result.append(guide_func(guide))
+        return jsonify(result)
+    guides = Guide.query.filter_by(tours_count=tours_count)
+    for guide in guides:
+        result.append(guide_func(guide))
+    return jsonify(result)
+
+@app.get("/guides/<int:gid>")
+def get_one(gid):
+    giude = Guide.query.get(gid)
+    return jsonify(guide_func(giude))
+
+@app.route("/guides/<int:gid>/delete")
+def delete_guide(gid):
+    guide = Guide.query.get(gid)
+    db.session.delete(guide)
+    db.session.commit()
+    return jsonify("")
+
+@app.post("/guides")
+def create_guide():
+    data = request.json
+    guide = Guide(
+        surname=data.get('surname'),
+        full_name=data.get('full_name'),
+        tours_count=data.get('tours_count'),
+        bio=data.get('bio'),
+        is_pro=data.get('is_pro'),
+        company=data.get('company')
+    )
+    db.session.add(guide)
+    db.session.commit()
+    return jsonify(guide_func(guide))
+
+
 
 
 if __name__ == "__main__":

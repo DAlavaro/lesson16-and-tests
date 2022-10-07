@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 import prettytable
 from sqlalchemy import text
 from guides_sql import CREATE_TABLE, INSERT_VALUES
+from operator import or_
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
@@ -28,8 +29,11 @@ class Guide(db.Model):
 
 
 def delete_guides():
-    # TODO напишите запрос здесь
-    pass
+    db.session.query(Guide).filter(
+        or_(Guide.id == 1, Guide.id == 4)
+    ).delete()
+    db.session.query(Guide).filter(Guide.id == 7).delete()
+
 
 
 delete_guides()
