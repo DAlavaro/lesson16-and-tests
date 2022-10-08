@@ -112,12 +112,12 @@ def delete_guide(gid):
 def create_guide():
     data = request.json
     guide = Guide(
-        surname=data.get('surname'),
-        full_name=data.get('full_name'),
-        tours_count=data.get('tours_count'),
-        bio=data.get('bio'),
-        is_pro=data.get('is_pro'),
-        company=data.get('company')
+        surname = data.get("surname"),
+        full_name = data.get("full_name"),
+        tours_count = data.get("tours_count"),
+        bio = data.get("bio"),
+        is_pro = data.get("is_pro"),
+        company = data.get("company"),
     )
     db.session.add(guide)
     db.session.commit()
