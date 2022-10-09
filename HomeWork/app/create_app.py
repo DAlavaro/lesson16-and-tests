@@ -1,12 +1,54 @@
+import json
 from flask import Flask
 
-from __init__ import db
-from utils import load_data, load_offer, load_order, load_user
-
-from flask_sqlalchemy import SQLAlchemy
+from HomeWork.app import db
+from HomeWork.app.models import Offer, Order, User
 
 
+def load_data(path):
+    with open(path) as file:
+        return json.load(file)
 
+
+def load_offer(path):
+    offers = load_data(path)
+
+    for offer in offers:
+        db.sesion.add(
+            Offer(
+                id=offer.get("id"),
+                order_id=offer.get("order_id"),
+                executer_id=offer.get("executor_id")
+            )
+        )
+
+        db.session.commit()
+
+
+def load_order(path):
+    orders = load_data(path)
+
+    for order in orders:
+        db.sesion.add(
+            Order(
+                **order
+            )
+        )
+
+        db.session.commit()
+
+
+def load_user(path):
+    users = load_data(path)
+
+    for user in users:
+        db.sesion.add(
+            User(
+                **user
+            )
+        )
+
+        db.session.commit()
 
 
 def create_app():
@@ -18,9 +60,13 @@ def create_app():
 
     with app.context():
         db.init_app(app)
+        db.drop_all()
         db.create_all()
-        offer = load_offer("/Volumes/APPLE HDD/SKYPRO/lesson16-and-tests/HomeWork/data/offers.json")
-        order = load_order("/Volumes/APPLE HDD/SKYPRO/lesson16-and-tests/HomeWork/data/orders.json")
-        user = load_user("/Volumes/APPLE HDD/SKYPRO/lesson16-and-tests/HomeWork/data/users.json")
+        offer = load_offer("/HomeWork_2/data/offers.json")
+        order = load_order("/HomeWork_2/data/orders.json")
+        user = load_user("/HomeWork_2/data/users.json")
 
     return app
+
+
+app = create_app()

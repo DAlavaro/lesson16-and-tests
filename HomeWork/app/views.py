@@ -1,10 +1,10 @@
 import json
 
-from create_app import create_app, db
-
 from flask import current_app as app, request
 
-from models import User
+from HomeWork.app import db, create_app
+
+from HomeWork.app.models import User
 
 @app.route("/users", methods=['Get', 'POST'])
 def work_user():
@@ -37,4 +37,4 @@ def work_user():
             )
 
 if __name__ == "__main__":
-    app.run()
+    app.run("localhost", port=8000)
