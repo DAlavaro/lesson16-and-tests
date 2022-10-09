@@ -58,7 +58,7 @@ def create_app():
     app.config['JSON_AS_ASCII'] = {'ensure_ancii': False, 'indent': 4}
     app.config['SQLALCHEMY_ECHO'] = True
 
-    with app.context():
+    with app.context().push():
         db.init_app(app)
         db.drop_all()
         db.create_all()

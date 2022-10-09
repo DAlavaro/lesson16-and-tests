@@ -1,10 +1,4 @@
-from flask_sqlalchemy import SQLAlchemy
-
 from data import db
-
-
-
-
 # Создание модели user
 class User(db.Model):
     __tablename__ = "user"
